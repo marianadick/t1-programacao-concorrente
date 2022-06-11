@@ -16,7 +16,7 @@ int worker_gate_look_queue(queue_t* fila_fora)
 }
 
 //retira o primeiro estudante da fila e libera a ''catraca'' pra ele
-student_t* worker_gate_remove_student(queue_t* fila_fora)
+void worker_gate_remove_student(queue_t* fila_fora)
 {
     student_t* proximo = queue_remove(fila_fora);
     id_prox = proximo->_id;
@@ -52,7 +52,7 @@ void *worker_gate_run(void *arg)
 {
     int all_students_entered;
     int number_students;
-    int fila_de_fora;
+    int lenght_queue;
     queue_t* fila_fora = globals_get_queue();
     buffet_t* buffet_array = globals_get_buffets();
 
@@ -61,8 +61,8 @@ void *worker_gate_run(void *arg)
 
     while (all_students_entered == FALSE)
     {
-        fila_de_fora = worker_gate_look_queue(fila_fora);
-        if (fila_de_fora <= 0) {
+        lenght_queue = worker_gate_look_queue(fila_fora);
+        if (lenght_queue <= 0) {
             all_students_entered = TRUE;
             break;
         }
