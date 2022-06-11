@@ -14,7 +14,7 @@ void* student_run(void *arg)
 {
     student_t *self = (student_t*) arg;
     table_t *tables  = globals_get_table();
-
+    queue_insert(globals_get_queue(), self);
     worker_gate_insert_queue_buffet(self);
     student_serve(self);
     student_seat(self, tables);
