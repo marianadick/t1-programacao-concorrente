@@ -43,7 +43,7 @@ extern void chef_put_food();
 * 
 * @param  none
 */                  
-extern void chef_check_food();
+extern int chef_check_food();
 
 
 #endif
