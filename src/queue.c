@@ -37,7 +37,6 @@ void queue_finalize(queue_t *self)
 
 queue_t *queue_insert(queue_t *self, student_t *student)
 {
-
     /* Se a fila não está inicializada */
     if (self == NULL)
     {
@@ -52,7 +51,7 @@ queue_t *queue_insert(queue_t *self, student_t *student)
     /* Tamanho = Tamanho + 1 */
     self->_length = self->_length + 1;
 
-    printf("entrou na fila");
+    
     if (self->_length == 1)
     {
         /* Se a fila está vazia, então ... */

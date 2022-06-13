@@ -15,8 +15,6 @@ void* student_run(void *arg)
 {
     student_t *self = (student_t*) arg;
     table_t *tables  = globals_get_table();
-    queue_t *queue = globals_get_queue();
-    queue_insert(queue, self);
     worker_gate_insert_queue_buffet(self);
     student_serve(self);
     student_seat(self, tables);
@@ -43,7 +41,7 @@ void student_serve(student_t *self)
             while(buffet[self->_id_buffet]._meal[self->_buffet_position] == 0) {};
             buffet[self->_id_buffet]._meal[self->_buffet_position]--;
         }
-        if (self->_buffet_position < 4) {
+        if (self->_buffet_position < 4 || self->_buffet_position >= 0) {
             if (lado == 'L') {
                 while (buffet[self->_id_buffet].queue_left[self->_buffet_position+1] != 0) {};
             } else {
@@ -65,6 +63,7 @@ void student_leave(student_t *self, table_t *table)
 
 student_t *student_init()
 {
+    printf("f");
     student_t *student = malloc(sizeof(student_t));
     student->_id = rand() % 1000;
     student->_buffet_position = -1;
@@ -79,7 +78,7 @@ student_t *student_init()
         /* O estudante só deseja proteína */
         student->_wishes[3] = 1;
     }
-
+    
     return student;
 };
 
@@ -103,9 +102,9 @@ pthread_t students_come_to_lunch(int number_students)
  */
 void* _all_they_come(void *arg)
 {
-    int number_students = *((int *)arg);
-    
-    student_t *students[number_students];
+    // *((int *)arg);
+    int number_students = 50;
+    student_t *students[50];
 
     for (int i = 0; i < number_students; i++)
     {

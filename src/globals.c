@@ -5,7 +5,7 @@ queue_t *students_queue = NULL;
 table_t *table = NULL;
 buffet_t *buffets_ref = NULL;
 
-int students_number = 0;
+int students_number;
 int seats_per_table = 0;
 int number_of_tables = 0;
 int there_is_students = 1;

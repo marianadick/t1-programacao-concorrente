@@ -12,13 +12,13 @@ void *chef_run()
 
     while (TRUE)
     {
+        msleep(2000);
         // Chef checa se há comida no buffet e estudantes se servindo
         globals_set_there_is_students(chef_check_food());
         int there_is_students = globals_get_there_is_students();
         // Caso a fila e o buffet estiverem sem estudantes, o chef encerra
         if (!there_is_students && fila_fora->_length == 0) {
-            printf("chef foi pra casa a mimir");
-            break;
+
         }
     }
     
@@ -29,7 +29,6 @@ void *chef_run()
 void chef_put_food(int buffet, int meal, buffet_t* buffet_array)
 {
     printf("enchendo bacia %d do buffet %d", meal, buffet);
-    msleep(5000);
     // Retorna ao valor inicial da bacia, deixando-a cheia
     buffet_array[buffet]._meal[meal] = 40;
     printf("bacia %d do buffet %d cheia", meal, buffet);
