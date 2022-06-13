@@ -13,7 +13,8 @@ void *chef_run()
     while (TRUE)
     {
         // Chef checa se há comida no buffet e estudantes se servindo
-        int there_is_students = chef_check_food();
+        globals_set_there_is_students(chef_check_food());
+        int there_is_students = globals_get_there_is_students();
         // Caso a fila e o buffet estiverem sem estudantes, o chef encerra
         if (!there_is_students && fila_fora->_length == 0) {
             printf("chef foi pra casa a mimir");

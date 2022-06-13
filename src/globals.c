@@ -8,6 +8,7 @@ buffet_t *buffets_ref = NULL;
 int students_number = 0;
 int seats_per_table = 0;
 int number_of_tables = 0;
+int there_is_students = 0;
 
 void globals_set_number_of_tables(int number)
 {
@@ -70,6 +71,15 @@ buffet_t *globals_get_buffets()
     return buffets_ref;
 }
 
+void globals_set_there_is_students(int number)
+{
+    there_is_students = number;
+}
+
+int globals_get_there_is_students()
+{
+    return there_is_students;
+}
 
 /**
  * @brief Finaliza todas as variáveis globais que ainda não foram liberadas.

@@ -95,5 +95,18 @@ extern void globals_set_seats_per_table(int number);
  */
 extern int globals_get_seats_per_table();
 
+/**
+ * @brief Insere se há estudantes para utilizar o buffet.
+ * 
+ * @param number 
+ */
+extern void globals_set_there_is_students(int number);
+
+/**
+ * @brief Retorna se há estudantes para utilziar o buffet.
+ * 
+ * @return int
+ */
+extern int globals_get_there_is_students();
 
 #endif
