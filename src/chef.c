@@ -31,7 +31,7 @@ void chef_put_food(int buffet, int meal, buffet_t* buffet_array)
     printf("enchendo bacia %d do buffet %d", meal, buffet);
     msleep(5000);
     // Retorna ao valor inicial da bacia, deixando-a cheia
-    buffet_array[buffet]._meal[meal] == 40;
+    buffet_array[buffet]._meal[meal] = 40;
     printf("bacia %d do buffet %d cheia", meal, buffet);
 }
 
