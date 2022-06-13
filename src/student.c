@@ -10,6 +10,7 @@
 #include "globals.h"
 #include "table.h"
 
+
 void* student_run(void *arg)
 {
     student_t *self = (student_t*) arg;
@@ -25,12 +26,23 @@ void* student_run(void *arg)
 
 void student_seat(student_t *self, table_t *table)
 {
-    /* Insira sua lógica aqui */
+
 }
 
 void student_serve(student_t *self)
 {
-    /* Insira sua lógica aqui */
+    buffet_t* buffet = globals_get_buffets();
+    while (TRUE) {
+        if (self->_buffet_position == 4) {
+            break;
+        }
+        if (self->_wishes[self->_buffet_position] == 1 ) {
+            while(buffet[self->_id_buffet]._meal[self->_buffet_position] == 0) {};
+            buffet[self->_id_buffet]._meal[self->_buffet_position]--;
+        }
+        while (buffet[self->_id_buffet].queue_left[self->_buffet_position+1] != 0) {};
+        buffet_next_step(buffet, self);
+    }
 }
 
 void student_leave(student_t *self, table_t *table)
