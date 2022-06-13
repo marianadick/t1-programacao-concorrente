@@ -34,17 +34,19 @@ void student_serve(student_t *self)
     buffet_t* buffet = globals_get_buffets();
     char lado = self->left_or_right;
     while (TRUE) {
-        if (self->_buffet_position == 4) {
+        if (self->_buffet_position == -2) {
             break;
         }
         if (self->_wishes[self->_buffet_position] == 1 ) {
             while(buffet[self->_id_buffet]._meal[self->_buffet_position] == 0) {};
             buffet[self->_id_buffet]._meal[self->_buffet_position]--;
         }
-        if (lado == 'L') {
-            while (buffet[self->_id_buffet].queue_left[self->_buffet_position+1] != 0) {};
-        } else {
-            while (buffet[self->_id_buffet].queue_right[self->_buffet_position+1] != 0) {};
+        if (self->_buffet_position < 4) {
+            if (lado == 'L') {
+                while (buffet[self->_id_buffet].queue_left[self->_buffet_position+1] != 0) {};
+            } else {
+                while (buffet[self->_id_buffet].queue_right[self->_buffet_position+1] != 0) {};
+            }
         }
         buffet_next_step(buffet, self);
     }
