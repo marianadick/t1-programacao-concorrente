@@ -26,7 +26,8 @@ void* student_run(void *arg)
 
 void student_seat(student_t *self, table_t *table)
 {
-
+    print("aluno sentou");
+    msleep(2000);
 }
 
 void student_serve(student_t *self)
@@ -54,7 +55,7 @@ void student_serve(student_t *self)
 
 void student_leave(student_t *self, table_t *table)
 {
-    /* Insira sua lógica aqui */
+    print("aluno foi embora");
 }
 
 /* --------------------------------------------------------- */
