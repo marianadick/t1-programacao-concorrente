@@ -109,4 +109,18 @@ extern void globals_set_there_is_students(int number);
  */
 extern int globals_get_there_is_students();
 
+/**
+ * @brief Insere o numero de buffes
+ * 
+ * @param number
+ */
+extern void globals_set_number_of_buffets(int number);
+
+/**
+ * @brief Retorna o numero de buffes
+ * 
+ * @return int
+ */
+extern int globals_get_number_of_buffets();
+
 #endif

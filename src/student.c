@@ -15,7 +15,8 @@ void* student_run(void *arg)
 {
     student_t *self = (student_t*) arg;
     table_t *tables  = globals_get_table();
-    queue_insert(globals_get_queue(), self);
+    queue_t *queue = globals_get_queue();
+    queue_insert(queue, self);
     worker_gate_insert_queue_buffet(self);
     student_serve(self);
     student_seat(self, tables);
@@ -26,7 +27,7 @@ void* student_run(void *arg)
 
 void student_seat(student_t *self, table_t *table)
 {
-    print("aluno sentou");
+    printf("aluno sentou");
     msleep(2000);
 }
 
@@ -55,7 +56,7 @@ void student_serve(student_t *self)
 
 void student_leave(student_t *self, table_t *table)
 {
-    print("aluno foi embora");
+    printf("aluno foi embora");
 }
 
 /* --------------------------------------------------------- */

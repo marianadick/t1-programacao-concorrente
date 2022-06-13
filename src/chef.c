@@ -40,9 +40,9 @@ int chef_check_food()
 {
     buffet_t* buffet_array = globals_get_buffets();
     int there_is_students = FALSE;
-
+    int number_of_buffets = globals_get_number_of_buffets();
     //Percorre os buffets
-    for (int i = 0; i < config.buffets; i++) {
+    for (int i = 0; i < number_of_buffets; i++) {
         // Ṕercorre as bacias
         for (int j = 0; j < 5; j++) {
             // Verifica se a bacia está vazia

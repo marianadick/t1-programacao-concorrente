@@ -5,8 +5,8 @@
 #include "config.h"
 
 buffet_t* buffet_livre = NULL;
-char lado_livre = NULL;
-int id_prox = NULL;
+char lado_livre = '0';
+int id_prox = -1;
 pthread_mutex_t mutex;
 
 //Retorna o numero de alunos na fila de fora esperando para entrar
@@ -23,15 +23,16 @@ void worker_gate_remove_student(queue_t* fila_fora)
     proximo->_id_buffet = buffet_livre->_id;
     proximo->left_or_right = lado_livre;
     buffet_livre = NULL;
-    lado_livre = NULL;
+    lado_livre = '0';
 }
 
 //fica procurando por todos os buffets até achar um livre,
 //encontrado marca o lado e o qual o buffet
 void worker_gate_look_buffet(buffet_t* buffet_array)
 {
+    int number_of_buffets = globals_get_number_of_buffets();
     while(TRUE) {
-    for (int i = 0; i < config.buffets; i++) {
+    for (int i = 0; i < number_of_buffets; i++) {
         if (buffet_array[i].queue_left[0] == 0)   {
             buffet_livre = &buffet_array[i];
             lado_livre = 'L';
