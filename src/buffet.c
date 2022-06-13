@@ -4,10 +4,10 @@
 
 
 void *buffet_run(void *arg)
-{   
+{
     int all_students_entered = FALSE;
     buffet_t *self = (buffet_t*) arg;
-    
+
     /*  O buffet funciona enquanto houver alunos na fila externa. */
     while (all_students_entered == FALSE)
     {

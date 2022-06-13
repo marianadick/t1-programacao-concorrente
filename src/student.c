@@ -32,6 +32,7 @@ void student_seat(student_t *self, table_t *table)
 void student_serve(student_t *self)
 {
     buffet_t* buffet = globals_get_buffets();
+    char lado = self->left_or_right;
     while (TRUE) {
         if (self->_buffet_position == 4) {
             break;
@@ -40,7 +41,11 @@ void student_serve(student_t *self)
             while(buffet[self->_id_buffet]._meal[self->_buffet_position] == 0) {};
             buffet[self->_id_buffet]._meal[self->_buffet_position]--;
         }
-        while (buffet[self->_id_buffet].queue_left[self->_buffet_position+1] != 0) {};
+        if (lado == 'L') {
+            while (buffet[self->_id_buffet].queue_left[self->_buffet_position+1] != 0) {};
+        } else {
+            while (buffet[self->_id_buffet].queue_right[self->_buffet_position+1] != 0) {};
+        }
         buffet_next_step(buffet, self);
     }
 }
