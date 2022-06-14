@@ -25,8 +25,9 @@ void* student_run(void *arg)
 
 void student_seat(student_t *self, table_t *table)
 {
-    printf("aluno sentou");
-    msleep(2000);
+    printf("aluno sentou \n");
+    fflush(stdout);
+    msleep(1000);
 }
 
 void student_serve(student_t *self)
@@ -34,7 +35,8 @@ void student_serve(student_t *self)
     buffet_t* buffet = globals_get_buffets();
     char lado = self->left_or_right;
     while (TRUE) {
-        if (self->_buffet_position == -2) {
+        if (self->_buffet_position == 4) {
+            self->_buffet_position = -2;
             break;
         }
         if (self->_wishes[self->_buffet_position] == 1 ) {
@@ -44,17 +46,20 @@ void student_serve(student_t *self)
         if (self->_buffet_position < 4 || self->_buffet_position >= 0) {
             if (lado == 'L') {
                 while (buffet[self->_id_buffet].queue_left[self->_buffet_position+1] != 0) {};
-            } else {
+            } else if (lado == 'R') {
                 while (buffet[self->_id_buffet].queue_right[self->_buffet_position+1] != 0) {};
             }
         }
-        buffet_next_step(buffet, self);
+        if (self->_buffet_position < 4) {
+            buffet_next_step(buffet, self);
+        }
     }
 }
 
 void student_leave(student_t *self, table_t *table)
 {
-    printf("aluno foi embora");
+    printf("aluno foi embora \n");
+    fflush(stdout);
 }
 
 /* --------------------------------------------------------- */
@@ -63,7 +68,6 @@ void student_leave(student_t *self, table_t *table)
 
 student_t *student_init()
 {
-    printf("f");
     student_t *student = malloc(sizeof(student_t));
     student->_id = rand() % 1000;
     student->_buffet_position = -1;
@@ -103,8 +107,8 @@ pthread_t students_come_to_lunch(int number_students)
 void* _all_they_come(void *arg)
 {
     // *((int *)arg);
-    int number_students = 50;
-    student_t *students[50];
+    int number_students = 10;
+    student_t *students[10];
 
     for (int i = 0; i < number_students; i++)
     {

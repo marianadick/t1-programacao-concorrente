@@ -8,30 +8,35 @@
 quando não há mais estudantes no buffet ou na fila, o chef encerra */
 void *chef_run()
 {
-    queue_t* fila_fora = globals_get_queue();
+    globals_init_sem_chef();
 
     while (TRUE)
     {
-        msleep(2000);
+        int there_is_students = globals_get_there_is_students();
+        int outside_students = globals_get_students();
+        globals_wait_sem_chef();
         // Chef checa se há comida no buffet e estudantes se servindo
         globals_set_there_is_students(chef_check_food());
-        int there_is_students = globals_get_there_is_students();
         // Caso a fila e o buffet estiverem sem estudantes, o chef encerra
-        if (!there_is_students && fila_fora->_length == 0) {
-
+        if (!there_is_students && outside_students == 0) {
+            printf("chef saiu\n");
+            fflush(stdout);
+            break;
         }
     }
-    
+    globals_destroy_sem_chef();
     pthread_exit(NULL);
 }
 
 // Chef adiciona comida nas bacias vazias dos buffets
 void chef_put_food(int buffet, int meal, buffet_t* buffet_array)
 {
-    printf("enchendo bacia %d do buffet %d", meal, buffet);
+    printf("enchendo bacia %d do buffet %d\n", meal, buffet);
+    fflush(stdout);
     // Retorna ao valor inicial da bacia, deixando-a cheia
     buffet_array[buffet]._meal[meal] = 40;
-    printf("bacia %d do buffet %d cheia", meal, buffet);
+    printf("bacia %d do buffet %d cheia\n", meal, buffet);
+    fflush(stdout);
 }
 
 // Chef observa se as bacias estão vazias e se há estudantes nos buffets
@@ -47,6 +52,7 @@ int chef_check_food()
             // Verifica se a bacia está vazia
             if (buffet_array[i]._meal[j] == 0) {
                 printf("bacia %d do buffet %d vazia\n", j, i);
+                fflush(stdout);
                 // Adiciona comida se for o caso
                 chef_put_food(i, j, buffet_array);
             }
@@ -56,6 +62,7 @@ int chef_check_food()
             }
         }
     }
+    globals_post_sem_chef();
     return there_is_students;
 }
 

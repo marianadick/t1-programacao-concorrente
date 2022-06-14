@@ -123,4 +123,32 @@ extern void globals_set_number_of_buffets(int number);
  */
 extern int globals_get_number_of_buffets();
 
+/**
+ * @brief Inicia o semaforo
+ * 
+ * @return void
+ */
+extern void globals_init_sem_chef();
+
+/**
+ * @brief Destroi o semaforo
+ * 
+ * @return void
+ */
+extern void globals_destroy_sem_chef();
+
+/**
+ * @brief Chama o post do semaforo
+ * 
+ * @return void
+ */
+extern void globals_post_sem_chef();
+
+/**
+ * @brief Chama o wait do semaforo
+ * 
+ * @return void
+ */
+extern void globals_wait_sem_chef();
+
 #endif

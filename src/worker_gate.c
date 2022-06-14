@@ -27,8 +27,6 @@ void worker_gate_remove_student(queue_t* fila_fora)
     proximo->left_or_right = lado_livre;
     buffet_livre = NULL;
     lado_livre = '0';
-    printf("%d number\n", number);
-    fflush(stdout);
 }
 
 //fica procurando por todos os buffets até achar um livre,
@@ -37,7 +35,7 @@ void worker_gate_look_buffet(buffet_t* buffet_array)
 {
     int number_of_buffets = globals_get_number_of_buffets();
     while(TRUE) {
-        //printf("entrou no look: %d", number_of_buffets);
+
         for (int i = 0; i < number_of_buffets; i++) {
             if (buffet_array[i].queue_left[0] == 0)   {
                 buffet_livre = &buffet_array[i];
@@ -69,7 +67,8 @@ void *worker_gate_run(void *arg)
     {
         if (number_students <= 0) {
             all_students_entered = TRUE;
-            printf("foi embora");
+            printf("foi embora \n");
+            fflush(stdout);
             break;
         }
         //O mutex serve para evitar que o worker gate defina como livre um buffet que 
@@ -77,8 +76,15 @@ void *worker_gate_run(void *arg)
         sem_wait(&semaphore_a);
         pthread_mutex_lock(&mutex);
         worker_gate_look_buffet(buffet_array);
+        if (lado_livre != '0'){
         worker_gate_remove_student(fila_fora);
-        printf("%d zzzzz\n", id_prox);
+        number_students = globals_get_students();
+        }
+        if (number_students == 0) {
+            printf("a mimir \n");
+            fflush(stdout);
+            break;
+        }
     }
 
     pthread_exit(NULL);

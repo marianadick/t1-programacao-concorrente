@@ -12,10 +12,11 @@ void *buffet_run(void *arg)
     /*  O buffet funciona enquanto houver alunos na fila externa. */
     while (all_students_entered == FALSE)
     {
+        msleep(500);
         /* Cada buffet possui: Arroz, Feijão, Acompanhamento, Proteína e Salada */
         /* Máximo de porções por bacia (40 unidades). */
         _log_buffet(self);
-        msleep(2000); /* Pode retirar este sleep quando implementar a solução! */
+       /* Pode retirar este sleep quando implementar a solução! */
     }
 
     pthread_exit(NULL);
@@ -42,6 +43,7 @@ void buffet_init(buffet_t *self, int number_of_buffets)
         }
 
         pthread_create(&self[i].thread, NULL, buffet_run, &self[i]);
+        globals_post_sem_chef();
     }
 }
 
@@ -91,6 +93,19 @@ void buffet_next_step(buffet_t *self, student_t *student)
             self[student->_id_buffet].queue_right[position] = 0;
             self[student->_id_buffet].queue_right[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
+        }
+    } else {
+        /* Está na fila esquerda? */
+        if (student->left_or_right == 'L')
+        {   /* Caminha para a posição seguinte da fila do buffet.*/
+            int position = student->_buffet_position;
+            self[student->_id_buffet].queue_left[position] = 0;
+            student->_buffet_position = -2;
+        }else /* Está na fila direita? */
+        {   /* Caminha para a posição seguinte da fila do buffet.*/
+            int position = student->_buffet_position;
+            self[student->_id_buffet].queue_right[position] = 0;
+            student->_buffet_position = -2;
         }
     }
 }
