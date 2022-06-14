@@ -97,8 +97,8 @@ pthread_t students_come_to_lunch(int number_students)
  */
 void* _all_they_come(void *arg)
 {
-    // *((int *)arg);
     int number_students = 100;
+    // *((int *)arg);
     student_t *students[100];
 
     for (int i = 0; i < number_students; i++)
