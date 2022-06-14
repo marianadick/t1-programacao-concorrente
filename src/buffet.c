@@ -12,10 +12,10 @@ void *buffet_run(void *arg)
     /*  O buffet funciona enquanto houver alunos na fila externa. */
     while (all_students_entered == FALSE)
     {
-        //msleep(500);
+        msleep(1000);
         /* Cada buffet possui: Arroz, Feijão, Acompanhamento, Proteína e Salada */
         /* Máximo de porções por bacia (40 unidades). */
-        //_log_buffet(self);
+        _log_buffet(self);
        /* Pode retirar este sleep quando implementar a solução! */
     }
     for (int i = 0; i < 5; i++) {
@@ -85,8 +85,6 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
 
 void buffet_next_step(buffet_t *self, student_t *student)
 {
-    printf("andou\n");
-    fflush(stdout);
     /* Se estudante ainda precisa se servir de mais alguma coisa... */
     if (student->_buffet_position + 1 < 5)
     {    /* Está na fila esquerda? */

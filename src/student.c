@@ -34,15 +34,16 @@ void student_seat(student_t *self, table_t *table)
 void student_serve(student_t *self)
 {
     buffet_t* buffet = globals_get_buffets();
-    while ((self->_buffet_position =! -1)) {
-
+    while (TRUE) {
+        msleep(500);
+        while(buffet[self->_id_buffet]._meal[self->_buffet_position] == 0) {};
         if (self->_wishes[self->_buffet_position] == 1 ) {
-            printf("pegou comida\n");
-            fflush(stdout);
-            while(buffet[self->_id_buffet]._meal[self->_buffet_position] == 0) {};
             buffet[self->_id_buffet]._meal[self->_buffet_position]--;
         }
         buffet_next_step(buffet, self);
+        if (self->_buffet_position == -1) {
+            break;
+        }
     }
 }
 
@@ -97,8 +98,8 @@ pthread_t students_come_to_lunch(int number_students)
 void* _all_they_come(void *arg)
 {
     // *((int *)arg);
-    int number_students = 10;
-    student_t *students[10];
+    int number_students = 100;
+    student_t *students[100];
 
     for (int i = 0; i < number_students; i++)
     {

@@ -34,7 +34,6 @@ void worker_gate_look_buffet(buffet_t* buffet_array)
 {
     int number_of_buffets = globals_get_number_of_buffets();
     while(TRUE) {
-
         for (int i = 0; i < number_of_buffets; i++) {
             if (buffet_array[i].queue_left[0] == 0)   {
                 buffet_livre = &buffet_array[i];
@@ -111,9 +110,13 @@ void worker_gate_insert_queue_buffet(student_t *student)
     queue_t* fila_fora = globals_get_queue();
     queue_insert(fila_fora, student);
     sem_post(&sem_sync_gate_student);
+
     sem_wait(&student->student_waiting); 
 
-    buffet_queue_insert(globals_get_buffets(), student);
+
+    if (buffet_queue_insert(globals_get_buffets(), student) == FALSE) {
+        printf("falhou");
+    }
 
     pthread_mutex_unlock(&mutex);
 
