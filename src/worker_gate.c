@@ -6,7 +6,6 @@
 
 buffet_t* buffet_livre = NULL;
 char lado_livre = '0';
-int id_prox = -1;
 pthread_mutex_t mutex;
 sem_t sem_sync_gate_student;
 int count_entry = 0;
@@ -22,9 +21,9 @@ void worker_gate_remove_student(queue_t* fila_fora)
 {
     student_t* proximo = queue_remove(fila_fora);
     count_entry++;
-    id_prox = proximo->_id;
     proximo->_id_buffet = buffet_livre->_id;
     proximo->left_or_right = lado_livre;
+    sem_post(&proximo->student_waiting);
     buffet_livre = NULL;
     lado_livre = '0';
 }
@@ -112,11 +111,10 @@ void worker_gate_insert_queue_buffet(student_t *student)
     queue_t* fila_fora = globals_get_queue();
     queue_insert(fila_fora, student);
     sem_post(&sem_sync_gate_student);
-    while (!(id_prox == student->_id)) {};    
+    sem_wait(&student->student_waiting); 
 
-    if (buffet_queue_insert(globals_get_buffets(), student) == FALSE) {
-        printf("falhou \n");
-    };
+    buffet_queue_insert(globals_get_buffets(), student);
+
     pthread_mutex_unlock(&mutex);
 
 }

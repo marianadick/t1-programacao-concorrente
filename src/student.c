@@ -14,12 +14,13 @@
 void* student_run(void *arg)
 {
     student_t *self = (student_t*) arg;
+    sem_init(&self->student_waiting, 0, 0);
     table_t *tables  = globals_get_table();
     worker_gate_insert_queue_buffet(self);
     student_serve(self);
     student_seat(self, tables);
     student_leave(self, tables);
-
+    sem_destroy(&self->student_waiting);
     pthread_exit(NULL);
 };
 
@@ -33,21 +34,13 @@ void student_seat(student_t *self, table_t *table)
 void student_serve(student_t *self)
 {
     buffet_t* buffet = globals_get_buffets();
-    char lado = self->left_or_right;
-    while (TRUE) {
-        if (self->_buffet_position == -1) {
-            break;
-        }
+    while ((self->_buffet_position =! -1)) {
+
         if (self->_wishes[self->_buffet_position] == 1 ) {
+            printf("pegou comida\n");
+            fflush(stdout);
             while(buffet[self->_id_buffet]._meal[self->_buffet_position] == 0) {};
             buffet[self->_id_buffet]._meal[self->_buffet_position]--;
-        }
-        if (self->_buffet_position < 4 || self->_buffet_position >= 0) {
-            if (lado == 'L') {
-                while (buffet[self->_id_buffet].queue_left[self->_buffet_position+1] != 0) {};
-            } else if (lado == 'R') {
-                while (buffet[self->_id_buffet].queue_right[self->_buffet_position+1] != 0) {};
-            }
         }
         buffet_next_step(buffet, self);
     }

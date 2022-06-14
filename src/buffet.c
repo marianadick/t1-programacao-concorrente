@@ -6,7 +6,7 @@
 void *buffet_run(void *arg)
 {   
     int all_students_entered = FALSE;
-    //buffet_t *self = (buffet_t*) arg;
+    buffet_t *self = (buffet_t*) arg;
     //queue_t* fila_fora = globals_get_queue();
 
     /*  O buffet funciona enquanto houver alunos na fila externa. */
@@ -18,7 +18,10 @@ void *buffet_run(void *arg)
         //_log_buffet(self);
        /* Pode retirar este sleep quando implementar a solução! */
     }
-
+    for (int i = 0; i < 5; i++) {
+        pthread_mutex_destroy(&self->mut_left[i]);
+        pthread_mutex_destroy(&self->mut_right[i]);
+    }
     pthread_exit(NULL);
 }
 
@@ -32,16 +35,17 @@ void buffet_init(buffet_t *self, int number_of_buffets)
         self[i]._id = i;
 
         /* Inicia com 40 unidades de comida em cada bacia */
-        for(j = 0; j < 5; j++)
+        for (j = 0; j < 5; j++) {
             self[i]._meal[j] = 40;
-
+            pthread_mutex_init(&self[i].mut_left[j], NULL);
+            pthread_mutex_init(&self[i].mut_right[j], NULL);
+        }
         for(j= 0; j< 5; j++){
              /* A fila esquerda do buffet possui cinco posições. */
             self[i].queue_left[j] = 0;
             /* A fila esquerda do buffet possui cinco posições. */
             self[i].queue_right[j] = 0;
         }
-
         pthread_create(&self[i].thread, NULL, buffet_run, &self[i]);
         
     }
@@ -56,7 +60,8 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
     {
         /* Verifica se a primeira posição está vaga */
         if (!self[student->_id_buffet].queue_left[0])
-        {
+        {   
+            pthread_mutex_lock(&self[student->_id_buffet].mut_left[0]);
             self[student->_id_buffet].queue_left[0] = student->_id;
             student->_buffet_position = 0;
             return TRUE;
@@ -68,6 +73,7 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
         if (!self[student->_id_buffet].queue_right[0])
         {
             /* Verifica se a primeira posição está vaga */
+            pthread_mutex_lock(&self[student->_id_buffet].mut_right[0]);
             self[student->_id_buffet].queue_right[0] = student->_id;
             student->_buffet_position = 0;
             return TRUE;
@@ -79,21 +85,27 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
 
 void buffet_next_step(buffet_t *self, student_t *student)
 {
+    printf("andou\n");
+    fflush(stdout);
     /* Se estudante ainda precisa se servir de mais alguma coisa... */
     if (student->_buffet_position + 1 < 5)
     {    /* Está na fila esquerda? */
         if (student->left_or_right == 'L')
         {   /* Caminha para a posição seguinte da fila do buffet.*/
             int position = student->_buffet_position;
+            pthread_mutex_lock(&self[student->_id_buffet].mut_left[position+1]);
             self[student->_id_buffet].queue_left[position] = 0;
             self[student->_id_buffet].queue_left[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
+            pthread_mutex_unlock(&self[student->_id_buffet].mut_left[position]);
         }else /* Está na fila direita? */
         {   /* Caminha para a posição seguinte da fila do buffet.*/
             int position = student->_buffet_position;
+            pthread_mutex_lock(&self[student->_id_buffet].mut_right[position+1]);
             self[student->_id_buffet].queue_right[position] = 0;
             self[student->_id_buffet].queue_right[position + 1] = student->_id;
             student->_buffet_position = student->_buffet_position + 1;
+            pthread_mutex_unlock(&self[student->_id_buffet].mut_right[position]);
         }
     } else {
         /* Está na fila esquerda? */
@@ -102,11 +114,13 @@ void buffet_next_step(buffet_t *self, student_t *student)
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_left[position] = 0;
             student->_buffet_position = -1;
+            pthread_mutex_unlock(&self[student->_id_buffet].mut_left[4]);
         }else /* Está na fila direita? */
         {   /* Caminha para a posição seguinte da fila do buffet.*/
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_right[position] = 0;
             student->_buffet_position = -1;
+            pthread_mutex_unlock(&self[student->_id_buffet].mut_right[4]);
         }
     }
 }
