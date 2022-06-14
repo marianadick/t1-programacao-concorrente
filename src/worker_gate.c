@@ -4,11 +4,14 @@
 #include "globals.h"
 #include "config.h"
 #include "chef.h"
+#include "table.h"
 
 buffet_t* buffet_livre = NULL;
 char lado_livre = '0';
 pthread_mutex_t mutex;
+pthread_mutex_t mut_table;
 sem_t sem_sync_gate_student;
+sem_t sem_empty_seats;
 int count_entry = 0;
 
 //Retorna o numero de alunos na fila de fora esperando para entrar
@@ -92,15 +95,21 @@ void *worker_gate_run(void *arg)
 void worker_gate_init(worker_gate_t *self)
 {
     int number_students = globals_get_students();
+    int number_of_tables = globals_get_number_of_tables();
+    int seats_per_table = globals_get_seats_per_table();
     pthread_mutex_init(&mutex, NULL);
     sem_init(&sem_sync_gate_student, 0, 0);
+    sem_init(&sem_empty_seats, 0, number_of_tables*seats_per_table);
+    pthread_mutex_init(&mut_table, NULL);
     pthread_create(&self->thread, NULL, worker_gate_run, &number_students);
 }
 
 void worker_gate_finalize(worker_gate_t *self)
 {
     pthread_mutex_destroy(&mutex);
+    pthread_mutex_destroy(&mut_table);
     sem_destroy(&sem_sync_gate_student);
+    sem_destroy(&sem_empty_seats);
     pthread_join(self->thread, NULL);
     free(self);
 }

@@ -10,6 +10,8 @@
 #include "globals.h"
 #include "table.h"
 
+pthread_mutex_t mut_table;
+sem_t sem_empty_seats;
 
 void* student_run(void *arg)
 {
@@ -26,9 +28,21 @@ void* student_run(void *arg)
 
 void student_seat(student_t *self, table_t *table)
 {
-    printf("aluno sentou \n");
-    fflush(stdout);
-    msleep(1000);
+    int number_of_tables = globals_get_number_of_tables();
+
+    sem_wait(&sem_empty_seats);
+    pthread_mutex_lock(&mut_table);
+    for (int i = 0; i < number_of_tables; i++) {
+        if (table[i]._empty_seats > 0) {
+            self->_id_table = table[i]._id;
+            table[i]._empty_seats--;
+            printf("aluno %d sentou na mesa %d \n", self->_id, table[i]._id);
+            fflush(stdout);
+            msleep(1000);
+            break;
+        }
+    }
+    pthread_mutex_unlock(&mut_table);
 }
 
 void student_serve(student_t *self)
@@ -49,8 +63,13 @@ void student_serve(student_t *self)
 
 void student_leave(student_t *self, table_t *table)
 {
-    printf("aluno foi embora \n");
+    // mutex no decremento (so sai 1)
+    pthread_mutex_lock(&mut_table);
+    printf("aluno %d saiu da mesa %d e foi embora\n", self->_id, self->_id_table);
     fflush(stdout);
+    table[self->_id_table]._empty_seats++;
+    pthread_mutex_unlock(&mut_table);
+    sem_post(&sem_empty_seats);    
 }
 
 /* --------------------------------------------------------- */
