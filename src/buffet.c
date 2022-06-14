@@ -101,12 +101,12 @@ void buffet_next_step(buffet_t *self, student_t *student)
         {   /* Caminha para a posição seguinte da fila do buffet.*/
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_left[position] = 0;
-            student->_buffet_position = -2;
+            student->_buffet_position = -1;
         }else /* Está na fila direita? */
         {   /* Caminha para a posição seguinte da fila do buffet.*/
             int position = student->_buffet_position;
             self[student->_id_buffet].queue_right[position] = 0;
-            student->_buffet_position = -2;
+            student->_buffet_position = -1;
         }
     }
 }

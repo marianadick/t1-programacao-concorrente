@@ -35,8 +35,7 @@ void student_serve(student_t *self)
     buffet_t* buffet = globals_get_buffets();
     char lado = self->left_or_right;
     while (TRUE) {
-        if (self->_buffet_position == 4) {
-            self->_buffet_position = -2;
+        if (self->_buffet_position == -1) {
             break;
         }
         if (self->_wishes[self->_buffet_position] == 1 ) {
@@ -50,9 +49,7 @@ void student_serve(student_t *self)
                 while (buffet[self->_id_buffet].queue_right[self->_buffet_position+1] != 0) {};
             }
         }
-        if (self->_buffet_position < 4) {
-            buffet_next_step(buffet, self);
-        }
+        buffet_next_step(buffet, self);
     }
 }
 
