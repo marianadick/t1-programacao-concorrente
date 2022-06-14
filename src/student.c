@@ -31,18 +31,17 @@ void student_seat(student_t *self, table_t *table)
     int number_of_tables = globals_get_number_of_tables();
 
     sem_wait(&sem_empty_seats);
-    pthread_mutex_lock(&mut_table);
     for (int i = 0; i < number_of_tables; i++) {
         if (table[i]._empty_seats > 0) {
+            pthread_mutex_lock(&mut_table);
             self->_id_table = table[i]._id;
             table[i]._empty_seats--;
             printf("aluno %d sentou na mesa %d \n", self->_id, table[i]._id);
             fflush(stdout);
-            msleep(1000);
             break;
         }
-    }
     pthread_mutex_unlock(&mut_table);
+    }
 }
 
 void student_serve(student_t *self)
