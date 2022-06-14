@@ -1,20 +1,20 @@
 #include <stdlib.h>
-
+#include <semaphore.h>
 #include "chef.h"
 #include "config.h"
 #include "globals.h"
 
+
+sem_t chef_sync_buffes;
 /* Chef checa o buffet e adiciona comida enquanto tem estudantes se servindo,
 quando não há mais estudantes no buffet ou na fila, o chef encerra */
 void *chef_run()
 {
-    globals_init_sem_chef();
-    globals_wait_sem_chef();
+    sem_wait(&chef_sync_buffes);
     while (TRUE)
     {
         int there_is_students = globals_get_there_is_students();
         int outside_students = globals_get_students();
-        
         // Chef checa se há comida no buffet e estudantes se servindo
         globals_set_there_is_students(chef_check_food());
         // Caso a fila e o buffet estiverem sem estudantes, o chef encerra
@@ -24,7 +24,7 @@ void *chef_run()
             break;
         }
     }
-    globals_destroy_sem_chef();
+    sem_destroy(&chef_sync_buffes);
     pthread_exit(NULL);
 }
 

@@ -2,6 +2,9 @@
 #include "buffet.h"
 #include "config.h"
 #include "globals.h"
+#include "chef.h"
+
+
 
 void *buffet_run(void *arg)
 {   
@@ -47,9 +50,8 @@ void buffet_init(buffet_t *self, int number_of_buffets)
             self[i].queue_right[j] = 0;
         }
         pthread_create(&self[i].thread, NULL, buffet_run, &self[i]);
-        
     }
-    globals_post_sem_chef();
+    sem_post(&chef_sync_buffes);
 }
 
 

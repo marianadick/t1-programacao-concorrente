@@ -11,27 +11,7 @@ int seats_per_table = 0;
 int number_of_tables = 0;
 int there_is_students = 1;
 int number_of_buffets = 0;
-sem_t semaphore_chef;
 
-void globals_init_sem_chef()
-{
-    sem_init(&semaphore_chef, 0, 0);
-}
-
-void globals_destroy_sem_chef()
-{
-    sem_destroy(&semaphore_chef);
-}
-
-void globals_post_sem_chef()
-{
-    sem_post(&semaphore_chef);
-}
-
-void globals_wait_sem_chef()
-{
-    sem_wait(&semaphore_chef);
-}
 
 void globals_set_number_of_buffets(int number)
 {
@@ -82,7 +62,6 @@ table_t *globals_get_table()
 {
     return table;
 }
-
 
 void globals_set_students(int number)
 {

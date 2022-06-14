@@ -3,6 +3,7 @@
 #include "worker_gate.h"
 #include "globals.h"
 #include "config.h"
+#include "chef.h"
 
 buffet_t* buffet_livre = NULL;
 char lado_livre = '0';
@@ -57,7 +58,7 @@ void *worker_gate_run(void *arg)
     int number_students;
     queue_t* fila_fora = globals_get_queue();
     buffet_t* buffet_array = globals_get_buffets();
-
+    sem_init(&chef_sync_buffes, 0, 0);
     //number_students = *((int *)arg);
     number_students = globals_get_students();
     all_students_entered = number_students > 0 ? FALSE : TRUE;

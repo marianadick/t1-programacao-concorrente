@@ -1,6 +1,6 @@
 #ifndef __chef_H__
 #define __chef_H__
-
+#include <semaphore.h>
 #include <pthread.h>
 
 typedef struct chef
@@ -8,7 +8,7 @@ typedef struct chef
     pthread_t thread;
 } chef_t;
 
-
+extern sem_t chef_sync_buffes;
 /**
 * @brief Inicializa a thread do chef.
 * 
