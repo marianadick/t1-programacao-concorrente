@@ -6,16 +6,16 @@
 void *buffet_run(void *arg)
 {   
     int all_students_entered = FALSE;
-    buffet_t *self = (buffet_t*) arg;
+    //buffet_t *self = (buffet_t*) arg;
     //queue_t* fila_fora = globals_get_queue();
 
     /*  O buffet funciona enquanto houver alunos na fila externa. */
     while (all_students_entered == FALSE)
     {
-        msleep(500);
+        //msleep(500);
         /* Cada buffet possui: Arroz, Feijão, Acompanhamento, Proteína e Salada */
         /* Máximo de porções por bacia (40 unidades). */
-        _log_buffet(self);
+        //_log_buffet(self);
        /* Pode retirar este sleep quando implementar a solução! */
     }
 
@@ -43,8 +43,9 @@ void buffet_init(buffet_t *self, int number_of_buffets)
         }
 
         pthread_create(&self[i].thread, NULL, buffet_run, &self[i]);
-        globals_post_sem_chef();
+        
     }
+    globals_post_sem_chef();
 }
 
 

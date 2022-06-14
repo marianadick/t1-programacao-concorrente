@@ -9,12 +9,12 @@ quando não há mais estudantes no buffet ou na fila, o chef encerra */
 void *chef_run()
 {
     globals_init_sem_chef();
-
+    globals_wait_sem_chef();
     while (TRUE)
     {
         int there_is_students = globals_get_there_is_students();
         int outside_students = globals_get_students();
-        globals_wait_sem_chef();
+        
         // Chef checa se há comida no buffet e estudantes se servindo
         globals_set_there_is_students(chef_check_food());
         // Caso a fila e o buffet estiverem sem estudantes, o chef encerra
@@ -62,7 +62,6 @@ int chef_check_food()
             }
         }
     }
-    globals_post_sem_chef();
     return there_is_students;
 }
 

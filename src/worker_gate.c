@@ -8,7 +8,8 @@ buffet_t* buffet_livre = NULL;
 char lado_livre = '0';
 int id_prox = -1;
 pthread_mutex_t mutex;
-sem_t semaphore_a;
+sem_t sem_sync_gate_student;
+int count_entry = 0;
 
 //Retorna o numero de alunos na fila de fora esperando para entrar
 int worker_gate_look_queue(queue_t* fila_fora)
@@ -20,8 +21,7 @@ int worker_gate_look_queue(queue_t* fila_fora)
 void worker_gate_remove_student(queue_t* fila_fora)
 {
     student_t* proximo = queue_remove(fila_fora);
-    int number = globals_get_students();
-    globals_set_students(number - 1);
+    count_entry++;
     id_prox = proximo->_id;
     proximo->_id_buffet = buffet_livre->_id;
     proximo->left_or_right = lado_livre;
@@ -71,16 +71,16 @@ void *worker_gate_run(void *arg)
             fflush(stdout);
             break;
         }
+        sem_wait(&sem_sync_gate_student);
         //O mutex serve para evitar que o worker gate defina como livre um buffet que 
         // possuí um estudante a caminho porém ainda não tomou o lugar definido
-        sem_wait(&semaphore_a);
         pthread_mutex_lock(&mutex);
         worker_gate_look_buffet(buffet_array);
         if (lado_livre != '0'){
         worker_gate_remove_student(fila_fora);
-        number_students = globals_get_students();
         }
-        if (number_students == 0) {
+        printf("count: %d\n", count_entry);
+        if (number_students == count_entry) {
             printf("a mimir \n");
             fflush(stdout);
             break;
@@ -94,14 +94,14 @@ void worker_gate_init(worker_gate_t *self)
 {
     int number_students = globals_get_students();
     pthread_mutex_init(&mutex, NULL);
-    sem_init(&semaphore_a, 0, 0);
+    sem_init(&sem_sync_gate_student, 0, 0);
     pthread_create(&self->thread, NULL, worker_gate_run, &number_students);
 }
 
 void worker_gate_finalize(worker_gate_t *self)
 {
     pthread_mutex_destroy(&mutex);
-    sem_destroy(&semaphore_a);
+    sem_destroy(&sem_sync_gate_student);
     pthread_join(self->thread, NULL);
     free(self);
 }
@@ -111,7 +111,7 @@ void worker_gate_insert_queue_buffet(student_t *student)
 {
     queue_t* fila_fora = globals_get_queue();
     queue_insert(fila_fora, student);
-    sem_post(&semaphore_a);
+    sem_post(&sem_sync_gate_student);
     while (!(id_prox == student->_id)) {};    
 
     if (buffet_queue_insert(globals_get_buffets(), student) == FALSE) {
