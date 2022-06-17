@@ -9,6 +9,7 @@ typedef struct table_t
         int _empty_seats;               /* Quantidade de lugares vazios */
         int _max_seats;                 /* Capacidade máxima de cada mesa*/
 
+        /* ALTERADO: Mutex e semáforo de controle das mesas */
         pthread_mutex_t mut_table;
         sem_t sem_empty_seats;
 } table_t; 

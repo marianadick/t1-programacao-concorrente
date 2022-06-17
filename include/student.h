@@ -10,9 +10,10 @@ typedef struct student
     int _wishes[5];                         /* salada, arroz, feijão, acompanhamento, proteína */
     int _buffet_position;                   /* Posição na fila do buffet*/
     int _id_buffet;                         /* Qual buffet o estudante está alocado?*/
-    int _id_table;
+    int _id_table;                          /* ALT: Id da mesa que o estudante está sentado*/
     char left_or_right;                     /* Fila da esquerda(L) ou da direita(R)*/
     pthread_t thread;                       /* A thread */
+    /*ALT: Semáforo do estudante*/
     sem_t student_waiting;
 } student_t;
 

@@ -26,20 +26,25 @@ void* student_run(void *arg)
     pthread_exit(NULL);
 };
 
+/* O estudante procura lugares vazios e senta para comer */
 void student_seat(student_t *self, table_t *table)
 {
     int number_of_tables = globals_get_number_of_tables();
 
+    /* Este semáforo impede os estudantes de procurarem mesas
+    quando não há lugares disponíveis */
     sem_wait(&sem_empty_seats);
-    pthread_mutex_lock(&mut_table);
+    /* Este mutex faz com que apenas um estudante sente-se
+    por vez */
+    pthread_mutex_lock(&mut_table); 
+    /*Ṕercorre as mesas procurando por uma mesa com lugares disponíveis */
     for (int i = 0; i < number_of_tables; i++) {
-        //pthread_mutex_trylock(&mut_table);
         if (table[i]._empty_seats > 0) {
+            // Grava o id da mesa para liberá-la depois
             self->_id_table = table[i]._id;
             table[i]._empty_seats--;
-            printf("aluno %d sentou na mesa %d \n", self->_id, table[i]._id);
+            printf("ESTUDANTE: %d está na mesa %d \n", self->_id, table[i]._id);
             fflush(stdout);
-        //pthread_mutex_unlock(&mut_table);
             break;
         }
     }
@@ -64,13 +69,18 @@ void student_serve(student_t *self)
 
 void student_leave(student_t *self, table_t *table)
 {
-    // mutex no decremento (so sai 1)
-    msleep(1000);
+    msleep(1500);
+
+    /* Apenas um aluno sai da mesa por vez */
     pthread_mutex_lock(&mut_table);
-    printf("aluno %d saiu da mesa %d e foi embora\n", self->_id, self->_id_table);
+
+    printf("ESTUDANTE: %d liberou a mesa %d\n", self->_id, self->_id_table);
     fflush(stdout);
     table[self->_id_table]._empty_seats++;
+
     pthread_mutex_unlock(&mut_table);
+
+    // Dá post no semáforo de empty seats pois o estudante liberou um lugar
     sem_post(&sem_empty_seats);    
 }
 
@@ -94,6 +104,7 @@ student_t *student_init()
         /* O estudante só deseja proteína */
         student->_wishes[3] = 1;
     }
+    
     
     return student;
 };

@@ -18,7 +18,7 @@ void *buffet_run(void *arg)
         msleep(1000);
         /* Cada buffet possui: Arroz, Feijão, Acompanhamento, Proteína e Salada */
         /* Máximo de porções por bacia (40 unidades). */
-        //_log_buffet(self);
+        _log_buffet(self);
        /* Pode retirar este sleep quando implementar a solução! */
     }
     for (int i = 0; i < 5; i++) {

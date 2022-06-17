@@ -8,7 +8,11 @@ typedef struct chef
     pthread_t thread;
 } chef_t;
 
+/* ALTERADO */
+/* Semáforo de sincronização do Chef */
 extern sem_t chef_sync_buffes;
+
+
 /**
 * @brief Inicializa a thread do chef.
 * 
