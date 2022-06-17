@@ -22,6 +22,7 @@ typedef struct buffet
     pthread_mutex_t mut_left[5];
 } buffet_t;
 
+int all_students_entered;
 /**
  * @brief Thread do buffet.
  * 

@@ -6,11 +6,12 @@
 
 typedef struct worker_gate
 {
-    
+
     pthread_t thread; // A thread do funcionário que fica na catraca.
 
 } worker_gate_t;
 
+int count_entry;
 
 /**
  * @brief Inicia o funcionário que fica na catraca.

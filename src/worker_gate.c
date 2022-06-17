@@ -69,8 +69,6 @@ void *worker_gate_run(void *arg)
     {
         if (number_students <= 0) {
             all_students_entered = TRUE;
-            printf("foi embora \n");
-            fflush(stdout);
             break;
         }
         sem_wait(&sem_sync_gate_student);
@@ -81,9 +79,8 @@ void *worker_gate_run(void *arg)
         if (lado_livre != '0'){
         worker_gate_remove_student(fila_fora);
         }
-        printf("count: %d\n", count_entry);
         if (number_students == count_entry) {
-            printf("a mimir \n");
+            printf("WORKER_GATE: Fim de expediente.\n");
             fflush(stdout);
             break;
         }

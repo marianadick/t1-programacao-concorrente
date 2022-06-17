@@ -10,8 +10,8 @@
 #include "globals.h"
 #include "table.h"
 
-pthread_mutex_t mut_table;
-sem_t sem_empty_seats;
+extern pthread_mutex_t mut_table;
+extern sem_t sem_empty_seats;
 
 void* student_run(void *arg)
 {
@@ -129,9 +129,9 @@ pthread_t students_come_to_lunch(int number_students)
  */
 void* _all_they_come(void *arg)
 {
-    int number_students = 100;
-    // *((int *)arg);
-    student_t *students[100];
+    int number_students = *((int *)arg);
+
+    student_t *students[number_students];
 
     for (int i = 0; i < number_students; i++)
     {

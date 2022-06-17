@@ -3,8 +3,12 @@
 #include "chef.h"
 #include "config.h"
 #include "globals.h"
+#include "worker_gate.h"
+#include "buffet.h"
 
 sem_t chef_sync_buffes;
+extern int count_entry;
+extern int all_students_entered;
 
 /* Chef checa o buffet e adiciona comida enquanto tem estudantes se servindo,
 quando não há mais estudantes no buffet ou na fila, o chef encerra */
@@ -13,18 +17,19 @@ void *chef_run()
     /* Este semáforo sincroniza o chef com os buffets, impedindo
     que ele percorra os buffets antes da inicialização dos mesmos */
     sem_wait(&chef_sync_buffes);
+    int outside_students = globals_get_students();
 
     while (TRUE)
     {
         // Variáveis de controle para o fim do expediente do chef
         int there_is_students = globals_get_there_is_students();
-        int outside_students = globals_get_students();
 
         // Chef checa se há comida no buffet e estudantes se servindo
         globals_set_there_is_students(chef_check_food());
 
         // Caso a fila e o buffet estiverem sem estudantes, o chef encerra
-        if (!there_is_students && outside_students == 0) {
+        if (!there_is_students && outside_students == count_entry) {
+            all_students_entered = TRUE; 
             printf("CHEF: Fim do expediente! Zzz\n");
             fflush(stdout);
             break;

@@ -4,18 +4,17 @@
 #include "globals.h"
 #include "chef.h"
 
-
+int all_students_entered = FALSE;
 
 void *buffet_run(void *arg)
 {   
-    int all_students_entered = FALSE;
     buffet_t *self = (buffet_t*) arg;
     //queue_t* fila_fora = globals_get_queue();
 
     /*  O buffet funciona enquanto houver alunos na fila externa. */
     while (all_students_entered == FALSE)
     {
-        msleep(1000);
+        msleep(500);
         /* Cada buffet possui: Arroz, Feijão, Acompanhamento, Proteína e Salada */
         /* Máximo de porções por bacia (40 unidades). */
         _log_buffet(self);
@@ -66,6 +65,8 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
             pthread_mutex_lock(&self[student->_id_buffet].mut_left[0]);
             self[student->_id_buffet].queue_left[0] = student->_id;
             student->_buffet_position = 0;
+            printf("ESTUDANTE: %d entrou\n", student->_id);
+            fflush(stdout);
             return TRUE;
         }
         return FALSE;
@@ -78,6 +79,8 @@ int buffet_queue_insert(buffet_t *self, student_t *student)
             pthread_mutex_lock(&self[student->_id_buffet].mut_right[0]);
             self[student->_id_buffet].queue_right[0] = student->_id;
             student->_buffet_position = 0;
+            printf("ESTUDANTE: %d entrou\n", student->_id);
+            fflush(stdout);
             return TRUE;
         }
         return FALSE;
