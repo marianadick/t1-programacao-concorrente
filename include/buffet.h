@@ -22,7 +22,10 @@ typedef struct buffet
     pthread_mutex_t mut_left[5];
 } buffet_t;
 
+/* ALTERADO PELOS ALUNOS */
+// ''bool'' para saber se todos alunos entraram e ja se serviram
 int all_students_entered;
+
 /**
  * @brief Thread do buffet.
  * 

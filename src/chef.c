@@ -30,8 +30,9 @@ void *chef_run()
         // Caso a fila e o buffet estiverem sem estudantes, o chef encerra
         if (!there_is_students && outside_students == count_entry) {
             all_students_entered = TRUE; 
-            printf("CHEF: Fim do expediente! Zzz\n");
-            fflush(stdout);
+            //descomentar para debbugar
+            //printf("CHEF: Fim do expediente! Zzz\n");
+            //fflush(stdout);
             break;
         }
     }
@@ -42,13 +43,16 @@ void *chef_run()
 // Chef adiciona comida nas bacias vazias dos buffets
 void chef_put_food(int buffet, int meal, buffet_t* buffet_array)
 {
-    printf("CHEF: Reabastecendo a refeição %d do buffet %d\n", meal, buffet);
-    fflush(stdout);
+    //descomentar para debbugar
+    //printf("CHEF: Reabastecendo a refeição %d do buffet %d\n", meal, buffet);
+    //fflush(stdout);
 
     // Retorna ao valor inicial da bacia, deixando-a cheia
     buffet_array[buffet]._meal[meal] = 40;
-    printf("CHEF: Refeição %d do buffet %d foi reabastecida\n", meal, buffet);
-    fflush(stdout);
+
+    //descomentar para debbugar
+    //printf("CHEF: Refeição %d do buffet %d foi reabastecida\n", meal, buffet);
+    //fflush(stdout);
 }
 
 // Chef observa se as bacias estão vazias e se há estudantes nos buffets
@@ -64,8 +68,9 @@ int chef_check_food()
         for (int j = 0; j < 5; j++) {
             // Verifica se a bacia está vazia
             if (buffet_array[i]._meal[j] == 0) {
-                printf("CHEF: Refeição %d do buffet %d acabou!\n", j, i);
-                fflush(stdout);
+                //descomentar para debbugar
+                //printf("CHEF: Refeição %d do buffet %d acabou!\n", j, i);
+                //fflush(stdout);
                 // Adiciona comida se for o caso
                 chef_put_food(i, j, buffet_array);
             }

@@ -16,8 +16,10 @@ extern sem_t sem_empty_seats;
 void* student_run(void *arg)
 {
     student_t *self = (student_t*) arg;
+    //inicia o próprio semaforo
     sem_init(&self->student_waiting, 0, 0);
     table_t *tables  = globals_get_table();
+    //entra na fila e espera ir para o buffet
     worker_gate_insert_queue_buffet(self);
     student_serve(self);
     student_seat(self, tables);
@@ -43,8 +45,9 @@ void student_seat(student_t *self, table_t *table)
             // Grava o id da mesa para liberá-la depois
             self->_id_table = table[i]._id;
             table[i]._empty_seats--;
-            printf("ESTUDANTE: %d está na mesa %d \n", self->_id, table[i]._id);
-            fflush(stdout);
+            //descomentar print para debbug
+            //printf("ESTUDANTE: %d está na mesa %d \n", self->_id, table[i]._id);
+            //fflush(stdout);
             break;
         }
     }
@@ -56,11 +59,16 @@ void student_serve(student_t *self)
     buffet_t* buffet = globals_get_buffets();
     while (TRUE) {
         msleep(500);
+        //Caso o buffet não tenha comida espera até o chef repor
         while(buffet[self->_id_buffet]._meal[self->_buffet_position] == 0) {};
         if (self->_wishes[self->_buffet_position] == 1 ) {
+        // se o estudante quer a comida na posição em que esta, decrementa 1 do buffet
             buffet[self->_id_buffet]._meal[self->_buffet_position]--;
         }
+        //Avança para a próxima posição do buffet
         buffet_next_step(buffet, self);
+        //o estudante recebe posição -1 ao sair do buffet
+        //portanto quebra o loop de se servir
         if (self->_buffet_position == -1) {
             break;
         }
@@ -73,9 +81,9 @@ void student_leave(student_t *self, table_t *table)
 
     /* Apenas um aluno sai da mesa por vez */
     pthread_mutex_lock(&mut_table);
-
-    printf("ESTUDANTE: %d liberou a mesa %d\n", self->_id, self->_id_table);
-    fflush(stdout);
+    //descomentar para debbugar
+    //printf("ESTUDANTE: %d liberou a mesa %d\n", self->_id, self->_id_table);
+    //fflush(stdout);
     table[self->_id_table]._empty_seats++;
 
     pthread_mutex_unlock(&mut_table);
