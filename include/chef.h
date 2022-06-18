@@ -38,9 +38,11 @@ extern void* chef_run();
 /**
 * @brief Chefe coloca comida no buffet.
 * 
-* @param  none
+* @param buffet
+* @param meal
+* @param buffet_array
 */
-extern void chef_put_food();
+extern void chef_put_food(int buffet, int meal, buffet_t* buffet_array);
 
 /**
 * @brief Chefe checa comida no buffet.
