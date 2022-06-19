@@ -24,7 +24,7 @@ typedef struct buffet
 
 /* ALTERADO PELOS ALUNOS */
 // ''bool'' para saber se todos alunos entraram e ja se serviram
-int all_students_entered;
+extern int all_students_entered;
 
 /**
  * @brief Thread do buffet.

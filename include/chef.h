@@ -2,6 +2,7 @@
 #define __chef_H__
 #include <semaphore.h>
 #include <pthread.h>
+#include <buffet.h>
 
 typedef struct chef
 {

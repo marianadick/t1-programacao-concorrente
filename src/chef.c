@@ -7,8 +7,6 @@
 #include "buffet.h"
 
 sem_t chef_sync_buffes;
-extern int count_entry;
-extern int all_students_entered;
 
 /* Chef checa o buffet e adiciona comida enquanto tem estudantes se servindo,
 quando não há mais estudantes no buffet ou na fila, o chef encerra */

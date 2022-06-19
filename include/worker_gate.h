@@ -11,7 +11,7 @@ typedef struct worker_gate
 
 } worker_gate_t;
 
-int count_entry;
+extern int count_entry;
 
 /**
  * @brief Inicia o funcionário que fica na catraca.
